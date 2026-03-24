@@ -117,18 +117,16 @@ public class Main {
             scan.nextLine();
             scan.nextLine();
             scan.nextLine();
-
+            scan.nextLine();
             while (scan.hasNextLine()) {
                 String line = scan.nextLine();
-                String[] tokens = line.split(";");
-                int cont = 1;
-                int clas = 1;
-                while (cont <= hotel.residentes.size()) {
-                    if (tokens[1].equals(hotel.residentes.get(cont).rank)) {
-                        clasificacion.anyadirAClas(clas, hotel.residentes.get(cont));
-                        clas++;
-                    }
-                }
+                System.out.println(line);
+                String[] split = line.split(";");
+                System.out.println(split[10]);
+                System.out.println(split[5]);
+                hotel.residentes.get(split[1]).setPuntos(Double.parseDouble(split[5]));
+                hotel.residentes.get(split[1]).setElo(Integer.parseInt(split[10]));
+                System.out.println(hotel.residentes.get(split[1]));
             }
 
         } catch (FileNotFoundException e) {}
