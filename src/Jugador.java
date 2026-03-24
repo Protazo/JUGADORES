@@ -7,6 +7,8 @@ public class Jugador {
     int fide_id;
     String origen;
     String info;
+    double puntos;
+    int elo;
 
     public Jugador(String[] str) {
         this.rank = Integer.parseInt(str[0]);
@@ -17,6 +19,14 @@ public class Jugador {
         this.fide_id = Integer.parseInt(str[5]);
         this.origen = str[6];
         this.info = str[7];
+    }
+
+    public void setElo(int elo) {
+        this.elo = elo;
+    }
+
+    public void setPuntos(double puntos) {
+        this.puntos = puntos;
     }
 
     @Override

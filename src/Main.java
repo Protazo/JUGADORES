@@ -1,3 +1,4 @@
+//Están los ejercicios 10 y 11 aquí
 import java.io.*;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -6,8 +7,10 @@ public class Main {
     static void main() {
         boolean continuar = false;
         ResidentesHotel hotel = new ResidentesHotel();
+        Clasificacion clasificacion = new Clasificacion();
         jugadoresHotel("src/jugadores.txt", hotel);
         do {
+            System.out.println("El 10 y el 11 están aquí");
             System.out.println("Menu de opciones: ");
             System.out.println("1. Jugadores alojados en el hotel");
             System.out.println("2. Jugadores de la comunidad valenciana");
@@ -29,7 +32,7 @@ public class Main {
                     }
 
                     case 3 -> {
-
+                        leerClas(clasificacion, hotel);
                     }
 
                     case 4 -> {
@@ -104,6 +107,31 @@ public class Main {
             }
             pw.close();
         } catch (IOException e) {}
+
+    }
+
+    public static void leerClas(Clasificacion clasificacion, ResidentesHotel hotel) {
+        try {
+            Scanner scan = new Scanner(new FileReader("src/clasificacion.csv"));
+            scan.nextLine();
+            scan.nextLine();
+            scan.nextLine();
+            scan.nextLine();
+
+            while (scan.hasNextLine()) {
+                String line = scan.nextLine();
+                String[] tokens = line.split(";");
+                int cont = 1;
+                int clas = 1;
+                while (cont <= hotel.residentes.size()) {
+                    if (tokens[1].equals(hotel.residentes.get(cont).rank)) {
+                        clasificacion.anyadirAClas(clas, hotel.residentes.get(cont));
+                        clas++;
+                    }
+                }
+            }
+
+        } catch (FileNotFoundException e) {}
 
     }
 }
