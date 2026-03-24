@@ -1,7 +1,3 @@
-Lista de jugadores alojados en Hotel Meli�
-
-Ranking        Nombre
-----------------------------------------
 1 - Shuvalova, Polina
 2 - Medarde Santiago, Luis Marcos
 3 - Merario Alarcon, Andres

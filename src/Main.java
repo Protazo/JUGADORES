@@ -1,80 +1,109 @@
 import java.io.*;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
-        try {
+    static void main() {
+        boolean continuar = false;
+        ResidentesHotel hotel = new ResidentesHotel();
+        jugadoresHotel("src/jugadores.txt", hotel);
+        do {
+            System.out.println("Menu de opciones: ");
+            System.out.println("1. Jugadores alojados en el hotel");
+            System.out.println("2. Jugadores de la comunidad valenciana");
+            System.out.println("3. Clasificacion general");
+            System.out.println("4. Salir");
 
-            Scanner sc = new Scanner(System.in);
-            System.out.println("Quieres ver los jugadores que se alojan en el hotel (1)");
-            System.out.println("o los que están federados en la comunidad valenciana (2)?");
-            String opcion = sc.nextLine();
+            try {
+                Scanner sc = new Scanner(System.in);
+                int opcion = sc.nextInt();
 
-            Scanner scan = new Scanner(
-                    new FileReader("src/jugadores.txt")
-            );
+                switch (opcion) {
 
-
-            PrintWriter pw = ficherodefault("src/alojados.txt");
-            PrintWriter cv = ficherodefault("src/jugadoresCV.txt");
-
-            scan.nextLine();
-            scan.nextLine();
-            String line = "";
-
-
-
-            while (scan.hasNext()) {
-                line = scan.nextLine();
-                String mayusculas = line.toUpperCase();
-                String[] split = line.split(";");
-                String[] splitmayus = mayusculas.split(";");
-
-                if (opcion.equals("1")) {
-                    if (splitmayus[7].contains("H")) {
-
-                        System.out.println(split[0] + " - " + split[2]);
-                        pw.println(split[0] + " - " + split[2]);
+                    case 1 -> {
+                        alojados("src/alojados.txt", hotel);
                     }
+
+                    case 2 -> {
+                        cv("src/jugadoresCV.txt", hotel);
+                    }
+
+                    case 3 -> {
+
+                    }
+
+                    case 4 -> {
+                        continuar = true;
+                    }
+
                 }
 
-                if (opcion.equals("2")) {
-                    if (splitmayus[7].contains("CV")) {
-
-                        System.out.println(split[0] + " - " + split[2]);
-                        cv.println(split[0] + " - " + split[2]);
-                    }
-                }
+            } catch (InputMismatchException e) {
+                System.out.println("Solo números permitidos");
             }
 
-            cv.close();
-            pw.close();
-        } catch (Exception e) {}
+
+        } while (!continuar);
     }
 
-    public static PrintWriter ficherodefault(String str) {
-        try {
+    public static void jugadoresHotel(String ruta, ResidentesHotel hotel) {
+        Scanner scan = ficheroDeLectura(ruta);
 
-            PrintWriter pw = new PrintWriter(
-                    new FileWriter(str));
-            if (!str.contains("CV")) {
-                pw.println("Lista de jugadores alojados en Hotel Meli�");
-                pw.println();
-                pw.println("Ranking        Nombre");
-                pw.println("----------------------------------------");
-            }
-            if (str.contains("CV")) {
-                pw.println("Lista de jugadores federados en CV");
-                pw.println();
-                pw.println("Ranking        Nombre");
-                pw.println("----------------------------------------");
-            }
-
-            return pw;
-        } catch (Exception e) {
-            return null;
+        scan.nextLine();
+        scan.nextLine();
+        while (scan.hasNextLine()) {
+            String line = scan.nextLine();
+            String[] tokens = line.split(";");
+            Jugador j1 = new Jugador(tokens);
+            hotel.añadirJugador(j1);
         }
+    }
 
+    public static Scanner ficheroDeLectura(String ruta) {
+        try {
+            Scanner scan = new Scanner(
+                    new FileReader(ruta)
+            );
+            return scan;
+        } catch (FileNotFoundException e) {}
+        return null;
+    }
+
+    public static void alojados(String ruta, ResidentesHotel hotel) {
+        int contador = 1;
+        try {
+            PrintWriter pw = new PrintWriter(
+                    new BufferedWriter(new FileWriter(ruta)
+                    )
+            );
+            while (contador <= hotel.residentes.size()) {
+                if (hotel.residentes.get(contador).info.contains("H")) {
+                    Jugador j1 = hotel.residentes.get(contador);
+                    pw.println(j1.rank + " - " + j1.nombre);
+                }
+                contador++;
+            }
+            pw.close();
+        } catch (IOException e) {}
+
+    }
+
+    public static void cv(String ruta, ResidentesHotel hotel) {
+        int contador = 1;
+        try {
+            PrintWriter pw = new PrintWriter(
+                    new BufferedWriter(new FileWriter(ruta)
+                    )
+            );
+            while (contador <= hotel.residentes.size()) {
+                if (hotel.residentes.get(contador).info.contains("CV")) {
+                    Jugador j1 = hotel.residentes.get(contador);
+                    pw.println(j1.rank + " - " + j1.nombre);
+                }
+                contador++;
+            }
+            pw.close();
+        } catch (IOException e) {}
 
     }
 }

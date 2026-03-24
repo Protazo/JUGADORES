@@ -1,0 +1,97 @@
+import java.io.*;
+import java.nio.Buffer;
+import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        try {
+
+            boolean continuar = false;
+            do {
+                Scanner sc = new Scanner(System.in);
+                System.out.println("Quieres ver los jugadores que se alojan en el hotel (1)");
+                System.out.println("o los que están federados en la comunidad valenciana (2)?");
+                System.out.println("Para mostrar la clasificación final (3)");
+                System.out.println("Para salir (4)");
+                String opcion = sc.nextLine();
+
+                Scanner scan = new Scanner(
+                        new FileReader("src/jugadores.txt")
+                );
+
+
+                PrintWriter pw = ficherodefault("src/alojados.txt");
+                PrintWriter cv = ficherodefault("src/jugadoresCV.txt");
+
+                scan.nextLine();
+                scan.nextLine();
+                String line = "";
+
+
+                if (opcion.equals("1") || opcion.equals("2")) {
+                    while (scan.hasNext()) {
+                        line = scan.nextLine();
+                        String mayusculas = line.toUpperCase();
+                        String[] split = line.split(";");
+                        String[] splitmayus = mayusculas.split(";");
+
+                        if (opcion.equals("1")) {
+                            if (splitmayus[7].contains("H")) {
+
+                                System.out.println(split[0] + " - " + split[2]);
+                                pw.println(split[0] + " - " + split[2]);
+                            }
+                        }
+
+                        if (opcion.equals("2")) {
+                            if (splitmayus[7].contains("CV")) {
+
+                                System.out.println(split[0] + " - " + split[2]);
+                                cv.println(split[0] + " - " + split[2]);
+                            }
+                        }
+                    }
+                }
+
+                if (opcion.equals("3")) {
+                    Scanner clas = new Scanner(new FileReader("src/ejemplo1.csv"));
+                    scan.nextLine();
+                    scan.nextLine();
+                    scan.nextLine();
+                    scan.nextLine();
+                    String clasificacion = scan.nextLine();
+
+                }
+
+                cv.close();
+                pw.close();
+            } while (!continuar);
+        } catch (Exception e) {}
+    }
+
+    public static PrintWriter ficherodefault(String str) {
+        try {
+
+            PrintWriter pw = new PrintWriter(
+                    new FileWriter(str));
+            if (!str.contains("CV")) {
+                pw.println("Lista de jugadores alojados en Hotel Meli�");
+                pw.println();
+                pw.println("Ranking        Nombre");
+                pw.println("----------------------------------------");
+            }
+            if (str.contains("CV")) {
+                pw.println("Lista de jugadores federados en CV");
+                pw.println();
+                pw.println("Ranking        Nombre");
+                pw.println("----------------------------------------");
+            }
+
+            return pw;
+        } catch (Exception e) {
+            return null;
+        }
+
+
+    }
+}
